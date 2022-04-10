@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../header';
+import TextField from '@material-ui/core/TextField';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -9,71 +10,148 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import { mediaService } from '../../utils/service';
+import { isValidUrl } from '../../utils/input-validation';
 import '../global.css';
 import './listing-page.css';
 
 let data = [];
 
 const ListingPage = () => {
-    const [restaurantList, setRestaurantList] = useState({});
+    const [mediaUrlList, setMediaUrlList] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [webUrlData, setWebUrlData] = useState({
+        input1: '',
+        input2: '',
+        input3: ''
+    });
+
     useEffect(() => {
-        setRestaurantList(!data);
+        getUrlList(searchTerm || '');
     }, []);
 
     const headerProps = {
-        location: restaurantList?.neighborhood || '',
+        location: 'dominos' || '',
+    };
+
+    const getUrlList = (data) => {
+        mediaService.fetchMediaUrl(data)
+            .then(response => {
+                if (response.statusCode !== 200) {
+                    console.log('No Media Url fetched');
+                    return;
+                }
+                console.log('response', response);
+            }).catch(err => {
+                console.error(`Error getting URL list. ${err.message}`);
+                return;
+            });
+    };
+
+    const handleChange = (e) => {
+        e.preventDefault();
+        const { name, value } = e.target;
+        setWebUrlData({ ...webUrlData, [name]: value });
+    };
+
+    const handleClick = (e) => {
+        e.preventDefault();
+
+        const data = Object.values(webUrlData).filter(el => el !== '');
+        const isAllurlvalid = isValidUrl(data);
+
+        if (!isAllurlvalid) {
+            console.log('One or more entered Web Url format is invalid, please cross check');
+            return;
+        };
+
+        const requestPayload = {
+            url: data
+        };
+
+        mediaService.scrapWebUrl(requestPayload)
+            .then(response => {
+                if(!response) {
+                    console.log(`unable to execue the operation`);
+                }
+
+                if (response.statusCode !== 200) {
+                    console.log(`${response.statusMessage}`);
+                    return;
+                }
+                console.log(`Successfully able to scrap media url(s)`);
+            }).catch(err => {
+                console.error(`Error scrapping URL(s). ${err.message}`);
+                return;
+            });
     };
 
     return (
         <div className="listingpage-container">
             <Header className="listingpage-container--header" {...headerProps} />
             <Container className="listingpage-container--item" maxWidth="lg">
-                <div className="listpage-count">
-                    <span>{`${restaurantList.restaurants?.length} Restaurants`}</span>
-                </div>
-                {
-                    restaurantList.restaurants?.length &&
-                    <Grid container spacing={3}>
-                        {
-                            restaurantList.restaurants.map((item) => {
-                                return (
-                                    <Grid className="card-grid" key={item.id} item xs={12} sm={6} md={4} lg={4}>
-                                        <Card className="card-container">
-                                            <CardActionArea>
-                                                <CardMedia
-                                                    className="cardMedia"
-                                                    image={item.image}
-                                                    title="Contemplative Reptile"
-                                                />
-                                                <CardContent>
-                                                    <Typography gutterBottom variant="h6" component="h1">
-                                                        {item.name}
-                                                    </Typography>
-                                                    <Typography variant="body2" color="textSecondary" component="p">
-                                                        <ul className="card-container--tags">
-                                                            {
-                                                                item?.tags?.length &&
-                                                                item.tags.map((tag, index) => {
-                                                                    return (
-                                                                        <li key={index}>{tag}</li>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </ul>
-                                                    </Typography>
-                                                </CardContent>
-                                            </CardActionArea>
-                                            <CardActions>
-                                                <Button className="card-container--quick-view-btn" size="small" color="primary">
-                                                    Quick View
-                                                </Button>
-                                            </CardActions>
-                                        </Card>
-                                    </Grid>
-                                )
-                            })
-                        }
+                <Grid container direction="row" spacing={2}>
+                    <Grid className="card-grid" item xs={12} sm={6} md={4} lg={4}>
+                        <form>
+                            <TextField className="inputFieldStyle" label="enter weburl" variant="outlined" color="primary"
+                                fullWidth size="small" name="input1" value={webUrlData.input1} onChange={handleChange} />
+                            <TextField className="inputFieldStyle" label="enter weburl" variant="outlined" color="primary"
+                                fullWidth size="small" name="input2" value={webUrlData.input2} onChange={handleChange} />
+                            <TextField className="inputFieldStyle" label="enter weburl" variant="outlined" color="primary"
+                                fullWidth size="small" name="input3" value={webUrlData.input3} onChange={handleChange} />
+                            <Button variant="contained" color="primary" onClick={handleClick}>Start Scrapping</Button>
+                        </form>
                     </Grid>
+                </Grid>
+                {
+                    (mediaUrlList.length) ?
+                        <>
+                            <div className="listpage-count">
+                                <span>{`Data for ${mediaUrlList.length} Web URL is shown`}</span>
+                            </div>
+                            <Grid container spacing={3}>
+                                {
+                                    (mediaUrlList).map((item) => {
+                                        return (
+                                            <Grid className="card-grid" key={item.id} item xs={12} sm={6} md={4} lg={4}>
+                                                <Card className="card-container">
+                                                    <CardActionArea>
+                                                        <CardMedia
+                                                            className="cardMedia"
+                                                            image={item.image}
+                                                            title="Contemplative Reptile"
+                                                        />
+                                                        <CardContent>
+                                                            <Typography gutterBottom variant="h6" component="h1">
+                                                                {item.name}
+                                                            </Typography>
+                                                            <Typography variant="body2" color="textSecondary" component="p">
+                                                                <ul className="card-container--tags">
+                                                                    {
+                                                                        item?.tags?.length &&
+                                                                        item.tags.map((tag, index) => {
+                                                                            return (
+                                                                                <li key={index}>{tag}</li>
+                                                                            )
+                                                                        })
+                                                                    }
+                                                                </ul>
+                                                            </Typography>
+                                                        </CardContent>
+                                                    </CardActionArea>
+                                                    <CardActions>
+                                                        <Button className="card-container--quick-view-btn" size="small" color="primary">
+                                                            Quick View
+                                                </Button>
+                                                    </CardActions>
+                                                </Card>
+                                            </Grid>
+                                        )
+                                    })
+                                }
+                            </Grid>
+                        </>
+                        : <h2>No Web URL scrapped till now</h2>
                 }
             </Container>
         </div>

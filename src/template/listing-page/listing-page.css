@@ -10,8 +10,12 @@
 
 .listingpage-container--item {
     margin-top: 2rem;
-    ;
     background-color: whitesmoke;
+    min-height: 70vh;
+}
+
+.inputFieldStyle {
+    margin-bottom: 1rem !important;
 }
 
 .card-container {
