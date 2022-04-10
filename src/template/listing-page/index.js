@@ -18,7 +18,7 @@ import './listing-page.css';
 let data = [];
 
 const ListingPage = () => {
-    const [mediaUrlList, setMediaUrlList] = useState([]);
+    const [mediaUrlList, setMediaUrlList] = useState({});
     const [searchTerm, setSearchTerm] = useState('');
     const [webUrlData, setWebUrlData] = useState({
         input1: '',
@@ -41,7 +41,7 @@ const ListingPage = () => {
                     console.log('No Media Url fetched');
                     return;
                 }
-                console.log('response', response);
+                setMediaUrlList(response);
             }).catch(err => {
                 console.error(`Error getting URL list. ${err.message}`);
                 return;
@@ -71,7 +71,7 @@ const ListingPage = () => {
 
         mediaService.scrapWebUrl(requestPayload)
             .then(response => {
-                if(!response) {
+                if (!response) {
                     console.log(`unable to execue the operation`);
                 }
 
@@ -90,7 +90,7 @@ const ListingPage = () => {
         <div className="listingpage-container">
             <Header className="listingpage-container--header" {...headerProps} />
             <Container className="listingpage-container--item" maxWidth="lg">
-                <Grid container direction="row" spacing={2}>
+                <Grid container direction="row" spacing={3}>
                     <Grid className="card-grid" item xs={12} sm={6} md={4} lg={4}>
                         <form>
                             <TextField className="inputFieldStyle" label="enter weburl" variant="outlined" color="primary"
@@ -102,40 +102,34 @@ const ListingPage = () => {
                             <Button variant="contained" color="primary" onClick={handleClick}>Start Scrapping</Button>
                         </form>
                     </Grid>
+                    <Grid className="card-grid" item xs={12} sm={6} md={4} lg={4}>
+                        <h2>Add anime text here</h2>
+                    </Grid>
                 </Grid>
                 {
-                    (mediaUrlList.length) ?
+                    (mediaUrlList.count !== 0) ?
                         <>
                             <div className="listpage-count">
-                                <span>{`Data for ${mediaUrlList.length} Web URL is shown`}</span>
+                                <span>{`Data for ${mediaUrlList.count} Web URL is shown`}</span>
                             </div>
                             <Grid container spacing={3}>
                                 {
-                                    (mediaUrlList).map((item) => {
+                                    (mediaUrlList?.data || []).map((itemObject) => {
                                         return (
-                                            <Grid className="card-grid" key={item.id} item xs={12} sm={6} md={4} lg={4}>
+                                            <Grid className="card-grid" key={itemObject._id} item xs={12} sm={6} md={4} lg={4}>
                                                 <Card className="card-container">
                                                     <CardActionArea>
                                                         <CardMedia
                                                             className="cardMedia"
-                                                            image={item.image}
+                                                            image={itemObject?.imageList[5].imgUrl}
                                                             title="Contemplative Reptile"
                                                         />
                                                         <CardContent>
                                                             <Typography gutterBottom variant="h6" component="h1">
-                                                                {item.name}
+                                                                {itemObject.name}
                                                             </Typography>
                                                             <Typography variant="body2" color="textSecondary" component="p">
-                                                                <ul className="card-container--tags">
-                                                                    {
-                                                                        item?.tags?.length &&
-                                                                        item.tags.map((tag, index) => {
-                                                                            return (
-                                                                                <li key={index}>{tag}</li>
-                                                                            )
-                                                                        })
-                                                                    }
-                                                                </ul>
+                                                                <a href={itemObject.url} target="_blank">{itemObject.url}</a>
                                                             </Typography>
                                                         </CardContent>
                                                     </CardActionArea>
