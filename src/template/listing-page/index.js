@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../header';
-import { data } from '../../file/restaurant-list';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -13,10 +12,12 @@ import Typography from '@material-ui/core/Typography';
 import '../global.css';
 import './listing-page.css';
 
+let data = [];
+
 const ListingPage = () => {
     const [restaurantList, setRestaurantList] = useState({});
     useEffect(() => {
-        setRestaurantList(data);
+        setRestaurantList(!data);
     }, []);
 
     const headerProps = {
