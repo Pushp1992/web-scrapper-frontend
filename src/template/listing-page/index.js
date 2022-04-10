@@ -3,13 +3,9 @@ import Header from '../header';
 import TextField from '@material-ui/core/TextField';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+
+import { CardList } from '../../component/card';
 import { mediaService } from '../../utils/service';
 import { isValidUrl } from '../../utils/input-validation';
 import '../global.css';
@@ -117,28 +113,7 @@ const ListingPage = () => {
                                     (mediaUrlList?.data || []).map((itemObject) => {
                                         return (
                                             <Grid className="card-grid" key={itemObject._id} item xs={12} sm={6} md={4} lg={4}>
-                                                <Card className="card-container">
-                                                    <CardActionArea>
-                                                        <CardMedia
-                                                            className="cardMedia"
-                                                            image={itemObject?.imageList[5].imgUrl}
-                                                            title="Contemplative Reptile"
-                                                        />
-                                                        <CardContent>
-                                                            <Typography gutterBottom variant="h6" component="h1">
-                                                                {itemObject.name}
-                                                            </Typography>
-                                                            <Typography variant="body2" color="textSecondary" component="p">
-                                                                <a href={itemObject.url} target="_blank">{itemObject.url}</a>
-                                                            </Typography>
-                                                        </CardContent>
-                                                    </CardActionArea>
-                                                    <CardActions>
-                                                        <Button className="card-container--quick-view-btn" size="small" color="primary">
-                                                            Quick View
-                                                </Button>
-                                                    </CardActions>
-                                                </Card>
+                                                <CardList itemObject={itemObject} />
                                             </Grid>
                                         )
                                     })
