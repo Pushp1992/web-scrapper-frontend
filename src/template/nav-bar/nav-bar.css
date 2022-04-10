@@ -1,0 +1,32 @@
+.navbar-container {
+    min-height: 6vh;
+}
+
+.logo {
+    padding-left: 45px !important;
+}
+
+.logo-avatar {
+    width: 112px !important;
+    height: 32px !important;
+}
+
+.user-icon {
+    display: inline !important;
+}
+
+.user-icon > img {
+    height: 20px !important;
+}
+
+.logo> :first-child {
+    padding-right: 20px;
+}
+
+.username> :first-child {
+    padding-right: 20px;
+}
+
+.MuiAvatar-img {
+    width: fit-content !important;
+}

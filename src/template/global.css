@@ -1,0 +1,17 @@
+/* src/template/nav-bar/index.js */
+/* src/template/header/index.js */
+@media screen and (max-width: 425px) {
+    .username> :last-child {
+        display: none;
+    }
+
+    .header-container {
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    .header-right {
+        padding: 15px 0 0 45px;
+    }
+}
