@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
@@ -7,8 +8,13 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-export const CardList = ({itemObject}) => {
-    console.log(itemObject);
+export const CardList = ({ itemObject }) => {
+
+    const getSelectedMediaData = (e, data) => {
+        e.preventDefault();
+        console.log(data)
+    }
+
     return (
         <Card className="card-container">
             <CardActionArea>
@@ -27,7 +33,7 @@ export const CardList = ({itemObject}) => {
                 </CardContent>
             </CardActionArea>
             <CardActions>
-                <Button className="card-container--quick-view-btn" size="small" color="primary">
+                <Button className="card-container--quick-view-btn" size="small" color="primary" onClick={(e) => getSelectedMediaData(e, itemObject)}>
                     Quick View
                 </Button>
             </CardActions>

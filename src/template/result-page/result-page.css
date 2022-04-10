@@ -1,0 +1,50 @@
+.listingpage-container {
+    min-height: 85vh;
+}
+
+.listpage-count {
+    color: rgb(77, 70, 70);
+    padding-top: 2rem;;
+    margin-bottom: 2rem;
+}
+
+.listingpage-container--item {
+    margin-top: 2rem;
+    background-color: whitesmoke;
+    min-height: 70vh;
+}
+
+.inputFieldStyle {
+    margin-bottom: 1rem !important;
+}
+
+.card-container {
+    max-width: 345px;
+}
+
+.cardMedia {
+    height: 140px;
+}
+
+.card-container--tags {
+    display: contents;
+}
+
+.card-container--tags li {
+    float: left;
+    margin: 0 7px;
+}
+
+.card-container:hover {
+    display: block !important;
+}
+
+.card-container--quick-view-btn {
+    /* display: none !important; */
+    text-transform: capitalize !important;
+    color: #3ea59c !important;
+}
+
+.card-container--quick-view-btn:hover {
+    border: 2px solid #00ccbc;   
+}
