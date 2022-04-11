@@ -13,6 +13,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { CardList } from '../../component/card';
 import { mediaService } from '../../utils/service';
 import { isValidUrl } from '../../utils/input-validation';
+import Toastr from '../../utils/toastr';
 import '../global.css';
 import './listing-page.css';
 
@@ -40,7 +41,7 @@ const ListingPage = () => {
         mediaService.fetchMediaUrl(data)
             .then(response => {
                 if (response.statusCode !== 200) {
-                    console.log('No Media Url fetched');
+                    Toastr.error('No Media Url fetched');
                     return;
                 }
                 if (searchTerm) {
@@ -50,7 +51,7 @@ const ListingPage = () => {
                 }
 
             }).catch(err => {
-                console.error(`Error getting URL list. ${err.message}`);
+                Toastr.error(`Error getting URL list. ${err.message}`);
                 return;
             });
     };
@@ -63,12 +64,14 @@ const ListingPage = () => {
 
     const handleSearch = (e) => {
         e.preventDefault();
+        Toastr.success(`Succesfully fetched data`);
         getUrlList(searchTerm);
     };
 
     const clearSearch = (e) => {
         e.preventDefault();
         setSearchTerm('');
+        Toastr.success('search box cleared');
     };
 
     const handleClick = (e) => {
@@ -78,7 +81,7 @@ const ListingPage = () => {
         const isAllurlvalid = isValidUrl(data);
 
         if (!isAllurlvalid) {
-            console.log('One or more entered Web Url format is invalid, please cross check');
+            Toastr.warning('One or more entered Web Url format is invalid, please cross check');
             return;
         };
 
@@ -89,21 +92,20 @@ const ListingPage = () => {
         mediaService.scrapWebUrl(requestPayload)
             .then(response => {
                 if (!response) {
-                    console.log(`unable to execue the operation`);
+                    Toastr.error(`unable to execue the operation`)
                 }
 
                 if (response.statusCode !== 200) {
-                    console.log(`${response.statusMessage}`);
+                    Toastr.error(`${response.statusMessage}`);
                     return;
                 }
-                console.log(`Successfully able to scrap media url(s)`);
+                Toastr.success(`Successfully able to scrap media url(s)`);
             }).catch(err => {
-                console.error(`Error scrapping URL(s). ${err.message}`);
+                Toastr.error(`Error scrapping URL(s). ${err.message}`);
                 return;
             });
     };
 
-    console.log('mediaUrlList', mediaUrlList);
     return (
         <div className="listingpage-container">
             <Header className="listingpage-container--header" {...headerProps} />
