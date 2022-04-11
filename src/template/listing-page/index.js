@@ -8,6 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import { CardList } from '../../component/card';
 import { mediaService } from '../../utils/service';
@@ -29,7 +30,7 @@ const ListingPage = () => {
 
     useEffect(() => {
         getUrlList(searchTerm);
-    }, []);
+    }, [searchTerm]);
 
     const headerProps = {
         location: 'India' || '',
@@ -63,6 +64,11 @@ const ListingPage = () => {
     const handleSearch = (e) => {
         e.preventDefault();
         getUrlList(searchTerm);
+    };
+
+    const clearSearch = (e) => {
+        e.preventDefault();
+        setSearchTerm('');
     };
 
     const handleClick = (e) => {
@@ -134,6 +140,9 @@ const ListingPage = () => {
                                                 <IconButton type="submit" className="iconButton" aria-label="search" onClick={handleSearch}>
                                                     <SearchIcon />
                                                 </IconButton>
+                                                <IconButton aria-label="delete" color="primary" onClick={clearSearch}>
+                                                    <DeleteIcon />
+                                                </IconButton>
                                             </Paper>
                                         </form>
                                     </Grid>
@@ -142,7 +151,7 @@ const ListingPage = () => {
                             </div>
                             <Grid container spacing={3}>
                                 {
-                                    ( mediaUrlList.data || []).map((itemObject) => {
+                                    (mediaUrlList.data || []).map((itemObject) => {
                                         return (
                                             <Grid className="card-grid" key={itemObject._id} item xs={12} sm={6} md={4} lg={4}>
                                                 <CardList itemObject={itemObject} />
