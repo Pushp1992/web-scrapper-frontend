@@ -89,7 +89,7 @@ const useStyles2 = makeStyles({
 export default function MediaTable(props) {
 
     const classes = useStyles2();
-    
+
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [rows, setRows] = useState(props.data);
@@ -119,10 +119,15 @@ export default function MediaTable(props) {
                     ).map((row, index) => (
                         <TableRow key={index}>
                             <TableCell component="th" scope="row">
-                                {row.imgUrl}
+                                <a href={row.imgUrl} target="_blank">
+                                    {row.imgUrl}
+                                </a>
+
                             </TableCell>
                             <TableCell component="th" scope="row">
-                                {row.videourl}
+                                <a href={row.videourl} target="_blank">
+                                    {row.videourl}
+                                </a>
                             </TableCell>
                         </TableRow>
                     ))}
