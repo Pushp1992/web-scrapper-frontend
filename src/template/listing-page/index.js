@@ -4,6 +4,10 @@ import TextField from '@material-ui/core/TextField';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import InputBase from '@material-ui/core/InputBase';
+import IconButton from '@material-ui/core/IconButton';
+import SearchIcon from '@material-ui/icons/Search';
 
 import { CardList } from '../../component/card';
 import { mediaService } from '../../utils/service';
@@ -15,6 +19,7 @@ let data = [];
 
 const ListingPage = () => {
     const [mediaUrlList, setMediaUrlList] = useState({});
+    // const [filteredUrl, setFilteredUrl] = useState({});
     const [searchTerm, setSearchTerm] = useState('');
     const [webUrlData, setWebUrlData] = useState({
         input1: '',
@@ -23,7 +28,7 @@ const ListingPage = () => {
     });
 
     useEffect(() => {
-        getUrlList(searchTerm || '');
+        getUrlList(searchTerm);
     }, []);
 
     const headerProps = {
@@ -37,7 +42,12 @@ const ListingPage = () => {
                     console.log('No Media Url fetched');
                     return;
                 }
-                setMediaUrlList(response);
+                if (searchTerm) {
+                    setMediaUrlList(response);
+                } else {
+                    setMediaUrlList(response);
+                }
+
             }).catch(err => {
                 console.error(`Error getting URL list. ${err.message}`);
                 return;
@@ -48,6 +58,11 @@ const ListingPage = () => {
         e.preventDefault();
         const { name, value } = e.target;
         setWebUrlData({ ...webUrlData, [name]: value });
+    };
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        getUrlList(searchTerm);
     };
 
     const handleClick = (e) => {
@@ -82,6 +97,7 @@ const ListingPage = () => {
             });
     };
 
+    console.log('mediaUrlList', mediaUrlList);
     return (
         <div className="listingpage-container">
             <Header className="listingpage-container--header" {...headerProps} />
@@ -106,11 +122,27 @@ const ListingPage = () => {
                     (mediaUrlList.count !== 0) ?
                         <>
                             <div className="listpage-count">
-                                <span>{`Data for ${mediaUrlList.count} Web URL is shown`}</span>
+                                <Grid container direction="row" spacing={3} justifyContent="space-between">
+                                    <Grid className="card-grid" item xs={12} sm={6} md={4} lg={4}>
+                                        <span>{`Data for ${mediaUrlList.count} Web URL is shown`}</span>
+                                    </Grid>
+                                    <Grid className="card-grid" item xs={12} sm={6} md={4} lg={4}>
+                                        <form>
+                                            <Paper component="form" className="root" style={{ maxWidth: '340px' }}>
+                                                <InputBase placeholder="Search by domain" inputProps={{ 'aria-label': 'search google maps' }}
+                                                    value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                                                <IconButton type="submit" className="iconButton" aria-label="search" onClick={handleSearch}>
+                                                    <SearchIcon />
+                                                </IconButton>
+                                            </Paper>
+                                        </form>
+                                    </Grid>
+                                </Grid>
+
                             </div>
                             <Grid container spacing={3}>
                                 {
-                                    (mediaUrlList?.data || []).map((itemObject) => {
+                                    ( mediaUrlList.data || []).map((itemObject) => {
                                         return (
                                             <Grid className="card-grid" key={itemObject._id} item xs={12} sm={6} md={4} lg={4}>
                                                 <CardList itemObject={itemObject} />

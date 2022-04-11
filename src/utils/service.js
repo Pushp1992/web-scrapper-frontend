@@ -24,12 +24,13 @@ export const mediaService = {
     },
 
     fetchMediaUrl(searchTerm) {
+        console.log('searchTerm', searchTerm);
         let encodedURI;
 
-        if (searchTerm !== '') {
-            encodedURI = window.encodeURI('/fetch');
-        } else {
+        if (searchTerm) {
             encodedURI = window.encodeURI(`/fetch/${searchTerm}`);
+        } else {
+            encodedURI = window.encodeURI('/fetch');
         }
 
         return axios({
