@@ -108,7 +108,7 @@ const ListingPage = () => {
         <div className="listingpage-container">
             <Header className="listingpage-container--header" {...headerProps} />
             <Container className="listingpage-container--item" maxWidth="lg">
-                <Grid container direction="row" spacing={3}>
+                <Grid container direction="row" spacing={3} justifyContent="space-between">
                     <Grid className="card-grid" item xs={12} sm={6} md={4} lg={4}>
                         <form>
                             <TextField className="inputFieldStyle" label="enter weburl" variant="outlined" color="primary"
@@ -117,11 +117,11 @@ const ListingPage = () => {
                                 fullWidth size="small" name="input2" value={webUrlData.input2} onChange={handleChange} />
                             <TextField className="inputFieldStyle" label="enter weburl" variant="outlined" color="primary"
                                 fullWidth size="small" name="input3" value={webUrlData.input3} onChange={handleChange} />
-                            <Button variant="contained" color="primary" onClick={handleClick}>Start Scrapping</Button>
+                            <Grid>
+                                <Button variant="contained" color="primary" onClick={handleClick}>Start Scrapping</Button> &nbsp; &nbsp;
+                            <Button variant="outlined" color="primary" onClick={handleSearch}>Fetch Scrapped Data</Button>
+                            </Grid>
                         </form>
-                    </Grid>
-                    <Grid className="card-grid" item xs={12} sm={6} md={4} lg={4}>
-                        <h2>Add anime text here</h2>
                     </Grid>
                 </Grid>
                 {
