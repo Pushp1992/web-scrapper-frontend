@@ -1,3 +1,8 @@
+const React = require('react');
+const ReactDOMServer = require('react-dom/server');
+const { StaticRouter } = require('react-router-dom');
+const App = require('../App');
+
 const express = require('express');
 const compression = require('compression');
 const cookie_parser = require('cookie-parser');
@@ -5,6 +10,13 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const path = require('path')
 const pino = require('express-pino-logger');
+const fs = require('fs');
+
+require('ignore-styles');
+require('@babel/register')({
+    ignore: [/(node_modules)/],
+    presets: ['@babel/preset-env', '@babel/preset-react']
+});
 
 const ENV = process.env.NODE_ENV | 'dev';
 const PORT = process.env.PORT || 5000;
@@ -15,6 +27,7 @@ if (ENV === 'production') {
 };
 
 const proxyResolver = require('./proxy/resolver');
+const { fstat } = require('fs');
 
 const morganFn = morgan(function (tokens, req, res) {
     return [
@@ -39,6 +52,39 @@ app.use(function (req, res, next) {
     next();
 });
 
+app.use('/build', express.static('build'));
+
+app.get('*', (req, res) => {
+    const context = {};
+    const app = ReactDOMServer.renderToNodeString(
+        <StaticRouter location={req.url} context={context}>
+            <App />
+        </StaticRouter>
+    );
+
+    const indexFile = path.resolve('./build/index.html');
+    fs.readFile(indexFile, 'utf-8', (err, data) => {
+        if(err) {
+            console.log("error!");
+            return res.status(500).send({
+                "message": "unable to render componennt"
+            });
+        }
+
+        return res.send(
+            data.replace('<div id="root"></div>', `<div id="root">${app}</div>`)
+        )
+    })
+});
+
+// Static file
+app.use(express.static(path.join(__dirname, "..", "..", "build")));
+
+// client app
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, "..", "..", "build", "index.html"));
+});
+
 // Health-check
 app.get('/health-check', (req, res) => res.send('Health check sucessfull!'));
 
@@ -53,14 +99,6 @@ app.use(pino);
 
 // Logger
 app.use(morganFn);
-
-// Static file
-app.use(express.static(path.join(__dirname, "..", "..", "build")));
-
-// client app
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, "..", "..", "build", "index.html"));
-});
 
 const server = app.listen(PORT, function () {
     const host = server.address().address;
