@@ -1,5 +1,5 @@
 {
-  "name": "media-scrapper-backend",
+  "name": "media-scrapper-frontend",
   "description": "Scrap all media urls i.e image and video url for a given web url(s)",
   "version": "0.1.0",
   "private": true,
@@ -37,6 +37,7 @@
     "dev": "run-p client server",
     "client": "PORT=8085 react-scripts start",
     "server": "node-env-run src/server --exec nodemon | pino-colada",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
@@ -9,11 +9,12 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
 export const CardList = ({ itemObject }) => {
+    const navigate = useNavigate();
 
     const getSelectedMediaData = (e, data) => {
         e.preventDefault();
-        console.log(data)
-    }
+        navigate('/result', { state: data });
+    };
 
     return (
         <Card className="card-container">

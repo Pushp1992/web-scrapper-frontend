@@ -27,7 +27,7 @@ const ListingPage = () => {
     }, []);
 
     const headerProps = {
-        location: 'dominos' || '',
+        location: 'India' || '',
     };
 
     const getUrlList = (data) => {
