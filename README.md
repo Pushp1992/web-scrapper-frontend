@@ -27,3 +27,30 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+### Docker Commands
+
+- check any docker process running
+
+```
+docker ps
+```
+
+- build your image
+
+```
+docker build -t pushp1992/web-scrapper-frontend:ui .
+```
+
+- Run your image locally
+
+```
+docker run -d -p 8086:8085 pushp1992/web-scrapper-frontend:ui
+```
+
+- Push your image to remote
+
+```
+ docker push pushp1992/web-scrapper-frontend:ui
+```
